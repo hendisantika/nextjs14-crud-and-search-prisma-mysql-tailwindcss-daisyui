@@ -75,3 +75,14 @@ export const getData = async (query: string) => {
         throw new Error("Failed to fetch employees data");
     }
 };
+
+export const getEmployeeById = async (id: string) => {
+    try {
+        const employee = await prisma.employee.findUnique({
+            where: {id},
+        });
+        return employee;
+    } catch (error) {
+        throw new Error("Failed to fetch contact data");
+    }
+};
