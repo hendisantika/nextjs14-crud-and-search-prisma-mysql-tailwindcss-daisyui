@@ -57,3 +57,21 @@ export const getEmployeelist = async (query: string) => {
         throw new Error("Failed to fetch employees data");
     }
 };
+
+export const getData = async (query: string) => {
+    try {
+        const employees = await prisma.employee.findMany({
+            where: {
+                name: {
+                    contains: query,
+                },
+            },
+            orderBy: {
+                createdAt: "desc",
+            },
+        });
+        return employees;
+    } catch (error) {
+        throw new Error("Failed to fetch employees data");
+    }
+};
