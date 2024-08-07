@@ -86,3 +86,35 @@ export const getEmployeeById = async (id: string) => {
         throw new Error("Failed to fetch contact data");
     }
 };
+
+export const updateEmployee = async (
+    id: string,
+    prevSate: any,
+    formData: FormData
+) => {
+    const validatedFields = EmployeeSchema.safeParse(
+        Object.fromEntries(formData.entries())
+    );
+
+    if (!validatedFields.success) {
+        return {
+            Error: validatedFields.error.flatten().fieldErrors,
+        };
+    }
+
+    try {
+        await prisma.employee.update({
+            data: {
+                name: validatedFields.data.name,
+                email: validatedFields.data.email,
+                phone: validatedFields.data.phone,
+            },
+            where: {id},
+        });
+    } catch (error) {
+        return {message: "Failed to update employee"};
+    }
+
+    revalidatePath("/employee");
+    redirect("/employee");
+};
