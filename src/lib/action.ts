@@ -1,6 +1,8 @@
 "use server";
 
-import {z} from "zod"; //npm i zod https://www.npmjs.com/package/zod
+import {z} from "zod";
+import {revalidatePath} from "next/cache";
+import {redirect} from "next/navigation"; //npm i zod https://www.npmjs.com/package/zod
 
 const EmployeeSchema = z.object({
     name: z.string().min(6),
@@ -34,4 +36,24 @@ export const saveEmployee = async (prevSate: any, formData: FormData) => {
 
     revalidatePath("/employee");
     redirect("/employee");
+};
+
+export const getEmployeelist = async (query: string) => {
+    try {
+        const employees = await prisma.employee.findMany({
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                phone: true,
+                createdAt: true,
+            },
+            orderBy: {
+                createdAt: "desc",
+            },
+        });
+        return employees;
+    } catch (error) {
+        throw new Error("Failed to fetch employees data");
+    }
 };
