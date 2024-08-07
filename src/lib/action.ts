@@ -1,8 +1,9 @@
 "use server";
 
-import {z} from "zod";
 import {revalidatePath} from "next/cache";
-import {redirect} from "next/navigation"; //npm i zod https://www.npmjs.com/package/zod
+import {redirect} from "next/navigation";
+import {prisma} from "@/lib/prisma";
+import {z} from "zod"; //npm i zod https://www.npmjs.com/package/zod
 
 const EmployeeSchema = z.object({
     name: z.string().min(6),
